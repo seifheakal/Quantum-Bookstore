@@ -1,4 +1,4 @@
-# Quantum Bookstore
+# Bookstore
 
 A robust Java implementation of an extensible online bookstore, supporting multiple book types, inventory management, and purchase workflows.
 
