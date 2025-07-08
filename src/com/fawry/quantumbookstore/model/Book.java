@@ -1,76 +1,57 @@
 package com.fawry.quantumbookstore.model;
 
-import java.time.LocalDate;
-
-public class Book {
-    private final String name;
+public abstract class Book {
+    private final String isbn;
+    private final String title;
+    private final String author;
+    private final int year;
     private final double price;
-    private final boolean isShippable;
-    private final double weight;
 
-    private int stock;
-    private final LocalDate expiryDate;
-
-    public Book(String name, double price, int stock, LocalDate expiryDate, boolean isShippable, double weight) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Book name cannot be empty");
+    public Book(String isbn, String title, String author, int year, double price) {
+        if (isbn == null || isbn.isBlank()) {
+            throw new IllegalArgumentException("ISBN cannot be empty");
         }
-        if (price <= 0) {
-            throw new IllegalArgumentException("Price must be positive");
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Title cannot be empty");
         }
-        if (stock < 0) {
-            throw new IllegalArgumentException("Stock cannot be negative");
+        if (author == null || author.isBlank()) {
+            throw new IllegalArgumentException("Author name cannot be empty");
         }
-        if (weight <= 0) {
-            throw new IllegalArgumentException("Must have positive weight");
+        if (year <= 0) {
+            throw new IllegalArgumentException("Year must be positive");
         }
-        if (expiryDate != null && expiryDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Expiry date cannot be in the past");
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
         }
-
-        this.name = name;
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.year = year;
         this.price = price;
-        this.stock = stock;
-        this.expiryDate = expiryDate;
-        this.isShippable = isShippable;
-        this.weight = weight;
     }
 
-    public String getName() {
-        return name;
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getYear() {
+        return year;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public int getStock() {
-        return stock;
-    }
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public boolean isShippable() {
-        return isShippable;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public boolean isExpiryable() {
-        return expiryDate != null;
-    }
-    public void setStock(int stock) {
-        if (stock < 0) {
-            throw new IllegalArgumentException("Stock cannot be negative");
-        }
-        this.stock = stock;
-    }
     @Override
     public String toString() {
-        return String.format("%s (Stock: %d)", name, stock);
+        return String.format("%s by %s (ISBN: %s, Year: %d, Price: %.2f)", title, author, isbn, year, price);
     }
 }

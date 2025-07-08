@@ -3,15 +3,20 @@ package com.fawry.quantumbookstore.model;
 public class Customer {
     private final String id;
     private final String name;
+    private final String email;
+    private final String address;
     private double balance;
 
-    public Customer(String id, String name, double initialBalance) {
+    public Customer(String id, String name, String email, String address, double initialBalance) {
         if (id == null || id.isBlank()) throw new IllegalArgumentException("Customer ID cannot be empty");
         if (name == null || name.isBlank()) throw new IllegalArgumentException("Customer name cannot be empty");
+        if (email == null || email.isBlank()) throw new IllegalArgumentException("Email cannot be empty");
+        if (address == null || address.isBlank()) throw new IllegalArgumentException("Address cannot be empty");
         if (initialBalance < 0) throw new IllegalArgumentException("Initial balance cannot be negative");
-
         this.id = id;
         this.name = name;
+        this.email = email;
+        this.address = address;
         this.balance = initialBalance;
     }
 
@@ -21,6 +26,14 @@ public class Customer {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public double getBalance() {
@@ -42,5 +55,10 @@ public class Customer {
             throw new IllegalArgumentException("Added amount cannot be negative");
         }
         balance += amount;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Customer: %s (ID: %s, Email: %s, Address: %s, Balance: %.2f)", name, id, email, address, balance);
     }
 }
