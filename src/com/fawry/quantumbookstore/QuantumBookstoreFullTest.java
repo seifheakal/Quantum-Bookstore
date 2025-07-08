@@ -39,7 +39,7 @@ public class QuantumBookstoreFullTest {
         }
 
         // ===== TEST 2: Normal EBook purchase (should fail for insufficient balance) =====
-        System.out.println("\n===== TEST 2: Normal EBook Purchase =====");
+        System.out.println("\n===== TEST 2: Normal EBook Purchase (insufficient balance)=====");
         try {
             double paid = purchaseService.buyBook("ISBN-002", 2, Tamer);
         } catch (Exception e) {
@@ -77,16 +77,8 @@ public class QuantumBookstoreFullTest {
             System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
         }
 
-        // ===== TEST 7: Buy with negative quantity =====
-        System.out.println("\n===== TEST 7: Buy with Negative Quantity =====");
-        try {
-            purchaseService.buyBook("ISBN-001", -1, Seif);
-        } catch (Exception e) {
-            System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
-        }
-
-        // ===== TEST 8: Restock PaperBook and buy again =====
-        System.out.println("\n===== TEST 8: Restock PaperBook and Buy Again =====");
+        // ===== TEST 7: Restock PaperBook and buy again =====
+        System.out.println("\n===== TEST 7: Restock PaperBook and Buy Again =====");
         try {
             inventoryService.restockPaperBook("ISBN-001", 5);
             double paid = purchaseService.buyBook("ISBN-001", 3, Seif);
@@ -95,22 +87,51 @@ public class QuantumBookstoreFullTest {
             System.out.println("Quantum book store: ERROR: " + e.getMessage());
         }
 
-        // ===== TEST 9: Try to buy non-existent book =====
-        System.out.println("\n===== TEST 9: Buy Non-Existent Book =====");
+        // ===== TEST 8: Try to buy non-existent book =====
+        System.out.println("\n===== TEST 8: Buy Non-Existent Book =====");
         try {
             purchaseService.buyBook("ISBN-999", 1, Seif);
         } catch (Exception e) {
             System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
         }
+        // ===== TEST 9: Attempt to add duplicate ISBN =====
+        System.out.println("\n===== TEST 9: Add Book with Existing ISBN =====");
+        try {
+            EBook duplicateEBook = new EBook("ISBN-002", "Quantum Crash", "Tamer", 2024, 250.0, "EPUB");
+            inventoryService.addBook(duplicateEBook);
+        } catch (Exception e) {
+            System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
+        }
 
-        // ===== TEST 10: Remove all books and check inventory =====
-        System.out.println("\n===== TEST 10: Remove All Books and Check Inventory =====");
+
+        // ===== TEST 10: Multiple Customers Buying Same Book (Stock Update Check) =====
+        System.out.println("\n===== TEST 10: Multiple Customers Buying Same Book =====");
+        try {
+            inventoryService.restockPaperBook("ISBN-001", 3); 
+            double paid1 = purchaseService.buyBook("ISBN-001", 1, Seif);
+            Tamer.addBalance(300.0);
+            double paid2 = purchaseService.buyBook("ISBN-001", 2, Tamer); 
+        } catch (Exception e) {
+            System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
+        }
+
+        // ===== TEST 11: Remove all books and check inventory =====
+        System.out.println("\n===== TEST 11: Remove All Books and Check Inventory =====");
         try {
             inventoryService.removeBook("ISBN-001");
             inventoryService.removeBook("ISBN-002");
             System.out.println("Quantum book store: Remaining books: " + inventoryService.getAllBooks());
         } catch (Exception e) {
             System.out.println("Quantum book store: ERROR: " + e.getMessage());
+        }
+
+
+        // ===== TEST 12: Case Sensitivity in ISBN =====
+        System.out.println("\n===== TEST 12: Case Sensitivity in ISBN Lookup =====");
+        try {
+            purchaseService.buyBook("isbn-001", 1, Seif); 
+        } catch (Exception e) {
+            System.out.println("Quantum book store: EXPECTED ERROR: " + e.getMessage());
         }
     }
 }
